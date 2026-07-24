@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#090b16" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NeuroArc" />
+  <meta name="description" content="NeuroArc daily brain training games." />
+  <title>NeuroArc — Daily Brain Training</title>
+  <style>:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #f8f8ff;
+  background: #080912;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --panel: rgba(19, 21, 39, 0.72);
+  --panel-strong: rgba(25, 27, 49, 0.92);
+  --line: rgba(255, 255, 255, 0.09);
+  --muted: #a3a7bd;
+  --violet: #9b7cff;
+  --violet-bright: #bca8ff;
+  --cyan: #41d7e8;
+  --gold: #f0ba52;
+  --rose: #f27a9d;
+  --green: #72df9c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: #080912;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(155, 124, 255, 0.48);
+  outline-offset: 3px;
+}
+
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 45% 10%, rgba(82, 49, 155, 0.18), transparent 38%),
+    linear-gradient(180deg, #0b0c18 0%, #070810 72%);
+}
+
+.orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(20px);
+  opacity: 0.32;
+}
+
+.orb-one {
+  width: 420px;
+  height: 420px;
+  top: -220px;
+  left: -140px;
+  background: rgba(71, 48, 144, 0.55);
+}
+
+.orb-two {
+  width: 340px;
+  height: 340px;
+  right: -170px;
+  top: 190px;
+  background: rgba(16, 121, 143, 0.22);
+}
+
+.grid-haze {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 78px;
+  padding: 14px clamp(18px, 5vw, 72px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(8, 9, 18, 0.72);
+  backdrop-filter: blur(22px);
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(188, 168, 255, 0.26);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(155,124,255,0.27), rgba(48,38,88,0.34));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), 0 10px 35px rgba(76,49,151,0.18);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--violet-bright);
+}
+
+.brand strong,
+.brand small {
+  display: block;
+}
+
+.brand strong {
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+
+.brand small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.profile-mini {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-level {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.11);
+  background: rgba(255,255,255,0.05);
+  color: var(--violet-bright);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.profile-xp {
+  min-width: 130px;
+}
+
+.profile-xp-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 7px;
+  color: #d8d9e3;
+  font-size: 11px;
+}
+
+.progress-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8262f2, #ba9eff);
+  box-shadow: 0 0 14px rgba(155,124,255,0.6);
+}
+
+.main-content {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: clamp(30px, 5vw, 64px) 0 64px;
+}
+
+.dashboard {
+  display: grid;
+  gap: 32px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.8fr);
+  gap: 30px;
+  align-items: stretch;
+}
+
+.hero-copy,
+.hero-panel,
+.game-card,
+.insight-card,
+.game-shell,
+.results-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(24px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 20px 80px rgba(0,0,0,0.19);
+}
+
+.hero-copy {
+  border-radius: 28px;
+  padding: clamp(28px, 5vw, 54px);
+  background:
+    linear-gradient(135deg, rgba(92,57,180,0.16), transparent 58%),
+    var(--panel);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--violet-bright);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.75;
+}
+
+.hero h1,
+.game-title h1,
+.results-card h1 {
+  margin: 16px 0 14px;
+  max-width: 760px;
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.hero h1 span {
+  color: var(--violet-bright);
+}
+
+.hero p {
+  max-width: 650px;
+  margin: 0;
+  color: #b5b7c8;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button {
+  min-height: 46px;
+  border-radius: 13px;
+  border: 1px solid transparent;
+  padding: 0 19px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #8d6bf1, #6a4cd1);
+  box-shadow: 0 11px 28px rgba(92, 61, 194, 0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.secondary-button {
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.055);
+}
+
+.ghost-button {
+  border-color: rgba(255,255,255,0.08);
+  background: transparent;
+  color: #b9bbca;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.ghost-button:hover,
+.game-card:hover {
+  transform: translateY(-2px);
+}
+
+.hero-panel {
+  min-height: 270px;
+  border-radius: 28px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  right: -65px;
+  bottom: -95px;
+  border-radius: 50%;
+  background: rgba(110,76,213,0.17);
+  filter: blur(8px);
+}
+
+.daily-ring {
+  width: 132px;
+  height: 132px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(var(--violet) var(--daily-progress), rgba(255,255,255,0.075) 0);
+  position: relative;
+}
+
+.daily-ring::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  background: #141627;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.daily-ring-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.daily-ring-content strong,
+.daily-ring-content small {
+  display: block;
+}
+
+.daily-ring-content strong {
+  font-size: 30px;
+  letter-spacing: -0.04em;
+}
+
+.daily-ring-content small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.streak-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.streak-row small,
+.metric small,
+.result-metrics small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+}
+
+.streak-row strong {
+  font-size: 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.section-header h2 {
+  margin: 7px 0 0;
+  font-size: clamp(24px, 3vw, 34px);
+  letter-spacing: -0.035em;
+}
+
+.section-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.game-card {
+  min-height: 260px;
+  padding: 22px;
+  border-radius: 21px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.game-card:hover {
+  border-color: rgba(188,168,255,0.28);
+  background: var(--panel-strong);
+}
+
+.game-icon,
+.result-badge {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-size: 22px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.violet { background: rgba(155,124,255,0.15); color: #beaaff; }
+.cyan { background: rgba(65,215,232,0.12); color: #70e6f2; }
+.gold { background: rgba(240,186,82,0.12); color: #ffd47e; }
+.rose { background: rgba(242,122,157,0.12); color: #ff9ebb; }
+
+.game-card .domain {
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+}
+
+.game-card h3 {
+  margin: 8px 0 8px;
+  font-size: 20px;
+}
+
+.game-card p {
+  margin: 0;
+  color: #aeb0c0;
+  line-height: 1.55;
+  font-size: 13px;
+}
+
+.game-card-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #d8d9e4;
+  font-size: 12px;
+}
+
+.game-card-footer b {
+  color: var(--violet-bright);
+}
+
+.insight-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 16px;
+}
+
+.insight-card {
+  border-radius: 21px;
+  padding: 22px;
+}
+
+.insight-card h3 {
+  margin: 0 0 18px;
+  font-size: 16px;
+}
+
+.week-bars {
+  height: 120px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  align-items: end;
+}
+
+.day-bar {
+  min-height: 26px;
+  border-radius: 9px 9px 4px 4px;
+  background: linear-gradient(180deg, #8f70ed, #4e387e);
+  position: relative;
+}
+
+.day-bar.empty {
+  background: rgba(255,255,255,0.05);
+}
+
+.day-bar span {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.metric {
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.035);
+  padding: 17px;
+  border-radius: 15px;
+}
+
+.metric strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 24px;
+  letter-spacing: -0.035em;
+}
+
+.game-screen,
+.results-screen {
+  display: grid;
+  min-height: calc(100vh - 150px);
+  place-items: center;
+}
+
+.game-shell {
+  width: min(820px, 100%);
+  border-radius: 28px;
+  padding: clamp(22px, 5vw, 42px);
+}
+
+.game-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+}
+
+.game-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.game-meta .game-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+}
+
+.game-meta strong,
+.game-meta small {
+  display: block;
+}
+
+.game-meta small {
+  color: var(--muted);
+  margin-top: 2px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.game-stats {
+  display: flex;
+  gap: 10px;
+}
+
+.stat-pill {
+  min-width: 74px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-align: center;
+}
+
+.stat-pill small,
+.stat-pill strong {
+  display: block;
+}
+
+.stat-pill small {
+  color: var(--muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.stat-pill strong {
+  margin-top: 4px;
+  font-size: 17px;
+}
+
+.round-progress {
+  height: 4px;
+  margin: 26px 0 32px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.round-progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #7558dd, #b69cff);
+  border-radius: inherit;
+}
+
+.game-stage {
+  min-height: 410px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.game-title h1 {
+  font-size: clamp(32px, 6vw, 54px);
+}
+
+.game-title p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.start-panel {
+  max-width: 530px;
+}
+
+.start-panel .primary-button {
+  margin-top: 26px;
+}
+
+.memory-grid {
+  width: min(430px, 100%);
+  aspect-ratio: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.memory-tile {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 13px;
+  background: rgba(255,255,255,0.045);
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.memory-tile:hover {
+  transform: scale(1.025);
+}
+
+.memory-tile.active {
+  border-color: rgba(194,175,255,0.58);
+  background: linear-gradient(145deg, #b69cff, #7858dd);
+  box-shadow: 0 0 26px rgba(139,102,231,0.5), inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+.memory-tile.selected {
+  border-color: rgba(188,168,255,0.45);
+  background: rgba(155,124,255,0.32);
+}
+
+.stage-label {
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.focus-word {
+  min-height: 100px;
+  font-size: clamp(56px, 13vw, 104px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+
+.answer-grid {
+  width: min(500px, 100%);
+  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.answer-button {
+  min-height: 58px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.048);
+  cursor: pointer;
+  font-weight: 750;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.answer-button:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.075);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.feedback {
+  height: 30px;
+  margin-top: 18px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.feedback.good { color: var(--green); }
+.feedback.bad { color: #ff8c9d; }
+
+.sequence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 34px;
+}
+
+.sequence span {
+  min-width: 74px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.045);
+  font-size: clamp(22px, 4vw, 31px);
+  font-weight: 800;
+}
+
+.sequence span.missing {
+  border-color: rgba(240,186,82,0.35);
+  color: var(--gold);
+  background: rgba(240,186,82,0.08);
+}
+
+.math-question {
+  font-size: clamp(50px, 10vw, 86px);
+  font-weight: 850;
+  letter-spacing: -0.06em;
+}
+
+.math-form {
+  width: min(360px, 100%);
+  margin-top: 34px;
+  display: flex;
+  gap: 10px;
+}
+
+.math-form input {
+  min-width: 0;
+  flex: 1;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.055);
+  color: white;
+  padding: 0 17px;
+  font-size: 20px;
+}
+
+.results-card {
+  width: min(620px, 100%);
+  border-radius: 28px;
+  padding: clamp(28px, 6vw, 54px);
+  text-align: center;
+}
+
+.result-badge {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 22px;
+  font-size: 28px;
+}
+
+.results-card .eyebrow::before {
+  display: none;
+}
+
+.results-card h1 {
+  font-size: clamp(34px, 6vw, 56px);
+}
+
+.results-card > p {
+  margin: 0 auto;
+  max-width: 470px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.result-metrics {
+  margin: 34px 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.result-metrics > div {
+  padding: 18px 10px;
+  border-radius: 15px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.035);
+}
+
+.result-metrics strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 23px;
+}
+
+.best-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 17px;
+  border-radius: 13px;
+  background: rgba(155,124,255,0.08);
+  color: #d8d5e6;
+  font-size: 13px;
+}
+
+.best-line b {
+  color: var(--violet-bright);
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+@media (max-width: 980px) {
+  .game-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    min-height: 230px;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    min-height: 68px;
+    padding-inline: 16px;
+  }
+
+  .profile-xp {
+    display: none;
+  }
+
+  .main-content {
+    width: min(100% - 24px, 1180px);
+    padding-top: 22px;
+  }
+
+  .hero-copy,
+  .hero-panel,
+  .game-shell,
+  .results-card {
+    border-radius: 22px;
+  }
+
+  .hero-copy {
+    padding: 29px 22px;
+  }
+
+  .hero h1 {
+    font-size: 44px;
+  }
+
+  .game-grid,
+  .insight-row {
+    grid-template-columns: 1fr;
+  }
+
+  .game-card {
+    min-height: 225px;
+  }
+
+  .section-header {
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .game-topline {
+    align-items: start;
+  }
+
+  .game-stats {
+    gap: 6px;
+  }
+
+  .stat-pill {
+    min-width: 62px;
+    padding: 9px 8px;
+  }
+
+  .game-stage {
+    min-height: 370px;
+  }
+
+  .memory-grid {
+    gap: 7px;
+  }
+
+  .memory-tile {
+    border-radius: 9px;
+  }
+
+  .sequence span {
+    min-width: 60px;
+    height: 62px;
+  }
+}
+
+@media (max-width: 460px) {
+  .brand small {
+    display: none;
+  }
+
+  .hero-actions,
+  .result-actions,
+  .math-form {
+    flex-direction: column;
+  }
+
+  .hero-actions button,
+  .result-actions button,
+  .math-form button {
+    width: 100%;
+  }
+
+  .math-form input {
+    min-height: 54px;
+  }
+
+  .result-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .focus-word {
+    font-size: 58px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <noscript>NeuroArc requires JavaScript to run.</noscript>
+  <script type="module">
+import { createElement } from 'react';
+import { createRoot } from 'react-dom/client';
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect, useMemo, useRef, useState } from 'react';
+const STORAGE_KEY = 'neuroarc-profile-v1';
+const games = [
+    {
+        id: 'memory',
+        title: 'Memory Matrix',
+        domain: 'Working memory',
+        description: 'Study a glowing tile pattern, then rebuild it from memory.',
+        glyph: '▦',
+        accent: 'violet',
+    },
+    {
+        id: 'focus',
+        title: 'Color Conflict',
+        domain: 'Selective attention',
+        description: 'Ignore the word and identify the color of the ink.',
+        glyph: '◎',
+        accent: 'cyan',
+    },
+    {
+        id: 'pattern',
+        title: 'Pattern Pulse',
+        domain: 'Fluid reasoning',
+        description: 'Detect the rule and choose the number that completes the sequence.',
+        glyph: '⌁',
+        accent: 'gold',
+    },
+    {
+        id: 'math',
+        title: 'Number Sprint',
+        domain: 'Processing speed',
+        description: 'Solve quick arithmetic problems before the timer expires.',
+        glyph: '±',
+        accent: 'rose',
+    },
+];
+const emptyProfile = {
+    xp: 0,
+    streak: 0,
+    lastPlayedDate: null,
+    sessions: [],
+    bestScores: { memory: 0, focus: 0, pattern: 0, math: 0 },
+};
+function dateKey(date = new Date()) {
+    return date.toISOString().slice(0, 10);
+}
+function daysBetween(a, b) {
+    const first = new Date(`${a}T12:00:00`);
+    const second = new Date(`${b}T12:00:00`);
+    return Math.round((second.getTime() - first.getTime()) / 86400000);
+}
+function loadProfile() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw)
+            return emptyProfile;
+        const parsed = JSON.parse(raw);
+        return {
+            ...emptyProfile,
+            ...parsed,
+            bestScores: { ...emptyProfile.bestScores, ...parsed.bestScores },
+            sessions: Array.isArray(parsed.sessions) ? parsed.sessions : [],
+        };
+    }
+    catch {
+        return emptyProfile;
+    }
+}
+function getLevel(xp) {
+    return Math.floor(xp / 500) + 1;
+}
+function getLevelProgress(xp) {
+    return xp % 500;
+}
+function App() {
+    const [profile, setProfile] = useState(() => loadProfile());
+    const [view, setView] = useState('dashboard');
+    const [lastResult, setLastResult] = useState(null);
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    }, [profile]);
+    const finishGame = (result) => {
+        const today = dateKey();
+        setProfile((current) => {
+            let nextStreak = current.streak;
+            if (!current.lastPlayedDate)
+                nextStreak = 1;
+            else {
+                const difference = daysBetween(current.lastPlayedDate, today);
+                if (difference === 1)
+                    nextStreak = current.streak + 1;
+                if (difference > 1)
+                    nextStreak = 1;
+            }
+            const record = {
+                id: crypto.randomUUID(),
+                game: result.game,
+                score: result.score,
+                accuracy: result.accuracy,
+                xp: result.xp,
+                playedAt: new Date().toISOString(),
+            };
+            return {
+                ...current,
+                xp: current.xp + result.xp,
+                streak: nextStreak,
+                lastPlayedDate: today,
+                sessions: [record, ...current.sessions].slice(0, 100),
+                bestScores: {
+                    ...current.bestScores,
+                    [result.game]: Math.max(current.bestScores[result.game], result.score),
+                },
+            };
+        });
+        setLastResult(result);
+        setView('results');
+    };
+    const startGame = (game) => setView(game);
+    return (_jsxs("div", { className: "app-shell", children: [_jsx(AmbientBackground, {}), _jsx(Header, { profile: profile, onHome: () => setView('dashboard') }), _jsxs("main", { className: "main-content", children: [view === 'dashboard' && (_jsx(Dashboard, { profile: profile, onStart: startGame })), view === 'memory' && (_jsx(MemoryMatrix, { onFinish: finishGame, onExit: () => setView('dashboard') })), view === 'focus' && (_jsx(ColorConflict, { onFinish: finishGame, onExit: () => setView('dashboard') })), view === 'pattern' && (_jsx(PatternPulse, { onFinish: finishGame, onExit: () => setView('dashboard') })), view === 'math' && (_jsx(NumberSprint, { onFinish: finishGame, onExit: () => setView('dashboard') })), view === 'results' && lastResult && (_jsx(Results, { result: lastResult, best: profile.bestScores[lastResult.game], onAgain: () => setView(lastResult.game), onHome: () => setView('dashboard') }))] })] }));
+}
+function AmbientBackground() {
+    return (_jsxs("div", { className: "ambient", "aria-hidden": "true", children: [_jsx("div", { className: "orb orb-one" }), _jsx("div", { className: "orb orb-two" }), _jsx("div", { className: "grid-haze" })] }));
+}
+function Header({ profile, onHome }) {
+    const level = getLevel(profile.xp);
+    return (_jsxs("header", { className: "topbar", children: [_jsxs("button", { className: "brand", onClick: onHome, "aria-label": "Go to dashboard", children: [_jsx("span", { className: "brand-mark", children: "N" }), _jsxs("span", { children: [_jsx("strong", { children: "NeuroArc" }), _jsx("small", { children: "Daily brain training" })] })] }), _jsxs("div", { className: "profile-mini", children: [_jsx("div", { className: "profile-level", title: `Level ${level}`, children: level }), _jsxs("div", { className: "profile-xp", children: [_jsxs("div", { className: "profile-xp-top", children: [_jsxs("span", { children: ["Level ", level] }), _jsxs("span", { children: [getLevelProgress(profile.xp), " / 500 XP"] })] }), _jsx("div", { className: "progress-track", children: _jsx("div", { className: "progress-fill", style: { width: `${(getLevelProgress(profile.xp) / 500) * 100}%` } }) })] })] })] }));
+}
+function Dashboard({ profile, onStart }) {
+    const sessionsToday = profile.sessions.filter((session) => dateKey(new Date(session.playedAt)) === dateKey()).length;
+    const target = 3;
+    const totalAccuracy = profile.sessions.length
+        ? Math.round(profile.sessions.reduce((sum, session) => sum + session.accuracy, 0) / profile.sessions.length)
+        : 0;
+    const week = useMemo(() => {
+        const days = [];
+        for (let offset = 6; offset >= 0; offset -= 1) {
+            const day = new Date();
+            day.setDate(day.getDate() - offset);
+            const key = dateKey(day);
+            const count = profile.sessions.filter((session) => dateKey(new Date(session.playedAt)) === key).length;
+            days.push({
+                label: day.toLocaleDateString(undefined, { weekday: 'short' }).slice(0, 1),
+                count,
+            });
+        }
+        return days;
+    }, [profile.sessions]);
+    return (_jsxs("div", { className: "dashboard", children: [_jsxs("section", { className: "hero", children: [_jsxs("div", { className: "hero-copy", children: [_jsx("span", { className: "eyebrow", children: "TRAIN WITH INTENTION" }), _jsxs("h1", { children: ["Sharper thinking, ", _jsx("span", { children: "one session" }), " at a time."] }), _jsx("p", { children: "A focused set of daily games for memory, attention, reasoning, and processing speed. Your progress stays privately on this device." }), _jsxs("div", { className: "hero-actions", children: [_jsx("button", { className: "primary-button", onClick: () => onStart(games[sessionsToday % games.length].id), children: sessionsToday ? 'Continue today’s training' : 'Start daily training' }), _jsx("button", { className: "secondary-button", onClick: () => document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' }), children: "Choose a game" })] })] }), _jsxs("aside", { className: "hero-panel", children: [_jsx("div", { className: "daily-ring", style: { '--daily-progress': `${Math.min(100, (sessionsToday / target) * 100)}%` }, children: _jsxs("div", { className: "daily-ring-content", children: [_jsxs("strong", { children: [sessionsToday, "/", target] }), _jsx("small", { children: "daily games" })] }) }), _jsxs("div", { className: "streak-row", children: [_jsxs("div", { children: [_jsx("small", { children: "Current streak" }), _jsxs("strong", { children: [profile.streak, " ", profile.streak === 1 ? 'day' : 'days'] })] }), _jsxs("div", { children: [_jsx("small", { children: "Total XP" }), _jsx("strong", { children: profile.xp.toLocaleString() })] })] })] })] }), _jsxs("section", { id: "games", children: [_jsxs("div", { className: "section-header", children: [_jsxs("div", { children: [_jsx("span", { className: "eyebrow", children: "TRAINING LIBRARY" }), _jsx("h2", { children: "Four ways to challenge your mind" })] }), _jsx("p", { children: "Difficulty adapts as you improve." })] }), _jsx("div", { className: "game-grid", children: games.map((game) => (_jsxs("button", { className: "game-card", onClick: () => onStart(game.id), children: [_jsx("span", { className: `game-icon ${game.accent}`, children: game.glyph }), _jsx("span", { className: "domain", children: game.domain }), _jsx("h3", { children: game.title }), _jsx("p", { children: game.description }), _jsxs("div", { className: "game-card-footer", children: [_jsx("span", { children: "Best score" }), _jsx("b", { children: profile.bestScores[game.id].toLocaleString() })] })] }, game.id))) })] }), _jsxs("section", { className: "insight-row", children: [_jsxs("div", { className: "insight-card", children: [_jsx("h3", { children: "Your last seven days" }), _jsx("div", { className: "week-bars", children: week.map((day, index) => (_jsx("div", { className: `day-bar ${day.count === 0 ? 'empty' : ''}`, style: { height: `${Math.max(22, Math.min(100, day.count * 30))}%` }, title: `${day.count} sessions`, children: _jsx("span", { children: day.label }) }, `${day.label}-${index}`))) })] }), _jsxs("div", { className: "insight-card", children: [_jsx("h3", { children: "Training snapshot" }), _jsxs("div", { className: "quick-stats", children: [_jsxs("div", { className: "metric", children: [_jsx("small", { children: "Sessions" }), _jsx("strong", { children: profile.sessions.length })] }), _jsxs("div", { className: "metric", children: [_jsx("small", { children: "Accuracy" }), _jsxs("strong", { children: [totalAccuracy, "%"] })] }), _jsxs("div", { className: "metric", children: [_jsx("small", { children: "Level" }), _jsx("strong", { children: getLevel(profile.xp) })] }), _jsxs("div", { className: "metric", children: [_jsx("small", { children: "Best streak" }), _jsxs("strong", { children: [profile.streak, "d"] })] })] })] })] })] }));
+}
+function GameFrame({ game, round, totalRounds, score, onExit, children, }) {
+    return (_jsx("div", { className: "game-screen", children: _jsxs("section", { className: "game-shell", children: [_jsxs("div", { className: "game-topline", children: [_jsxs("div", { className: "game-meta", children: [_jsx("span", { className: `game-icon ${game.accent}`, children: game.glyph }), _jsxs("div", { children: [_jsx("strong", { children: game.title }), _jsx("small", { children: game.domain })] })] }), _jsxs("div", { className: "game-stats", children: [round !== null && (_jsxs("div", { className: "stat-pill", children: [_jsx("small", { children: "Round" }), _jsxs("strong", { children: [round, "/", totalRounds] })] })), _jsxs("div", { className: "stat-pill", children: [_jsx("small", { children: "Score" }), _jsx("strong", { children: score })] }), _jsx("button", { className: "ghost-button", onClick: onExit, children: "Exit" })] })] }), round !== null && (_jsx("div", { className: "round-progress", children: _jsx("span", { style: { width: `${((round - 1) / totalRounds) * 100}%` } }) })), _jsx("div", { className: "game-stage", children: children })] }) }));
+}
+function MemoryMatrix({ onFinish, onExit }) {
+    const game = games[0];
+    const totalRounds = 7;
+    const [status, setStatus] = useState('intro');
+    const [round, setRound] = useState(1);
+    const [pattern, setPattern] = useState([]);
+    const [selected, setSelected] = useState([]);
+    const [score, setScore] = useState(0);
+    const [correct, setCorrect] = useState(0);
+    const timeoutRef = useRef(null);
+    useEffect(() => () => {
+        if (timeoutRef.current)
+            window.clearTimeout(timeoutRef.current);
+    }, []);
+    const size = round >= 5 ? 5 : 4;
+    const createRound = (nextRound) => {
+        const gridSize = nextRound >= 5 ? 5 : 4;
+        const activeCount = Math.min(3 + nextRound, Math.floor((gridSize * gridSize) * 0.48));
+        const positions = shuffle(Array.from({ length: gridSize * gridSize }, (_, index) => index)).slice(0, activeCount);
+        setRound(nextRound);
+        setPattern(positions);
+        setSelected([]);
+        setStatus('show');
+        timeoutRef.current = window.setTimeout(() => setStatus('answer'), Math.max(850, 1800 - nextRound * 120));
+    };
+    const start = () => createRound(1);
+    const chooseTile = (index) => {
+        if (status !== 'answer' || selected.includes(index))
+            return;
+        const next = [...selected, index];
+        setSelected(next);
+        if (next.length === pattern.length) {
+            const hits = next.filter((item) => pattern.includes(item)).length;
+            const perfect = hits === pattern.length;
+            const roundScore = hits * 100 + (perfect ? 250 : 0) + round * 30;
+            setScore((current) => current + roundScore);
+            setCorrect((current) => current + (perfect ? 1 : 0));
+            setStatus(perfect ? 'good' : 'bad');
+            timeoutRef.current = window.setTimeout(() => {
+                if (round === totalRounds) {
+                    const finalScore = score + roundScore;
+                    const accuracy = Math.round(((correct + (perfect ? 1 : 0)) / totalRounds) * 100);
+                    onFinish({
+                        game: 'memory',
+                        score: finalScore,
+                        accuracy,
+                        xp: 70 + accuracy,
+                        headline: accuracy >= 80 ? 'Memory locked in.' : 'Pattern practice complete.',
+                        detail: `You cleared ${correct + (perfect ? 1 : 0)} of ${totalRounds} patterns perfectly.`,
+                    });
+                }
+                else {
+                    createRound(round + 1);
+                }
+            }, 850);
+        }
+    };
+    return (_jsx(GameFrame, { game: game, round: status === 'intro' ? null : round, totalRounds: totalRounds, score: score, onExit: onExit, children: status === 'intro' ? (_jsxs("div", { className: "start-panel game-title", children: [_jsx("span", { className: "eyebrow", children: "WORKING MEMORY" }), _jsx("h1", { children: "Remember the glow." }), _jsx("p", { children: "A pattern will appear briefly. When it fades, tap the same tiles. Patterns grow as your session progresses." }), _jsx("button", { className: "primary-button", onClick: start, children: "Begin memory test" })] })) : (_jsxs("div", { style: { width: '100%' }, children: [_jsx("div", { className: "stage-label", children: status === 'show' ? 'Study the pattern' : status === 'answer' ? `Choose ${pattern.length} tiles` : status === 'good' ? 'Perfect pattern' : 'Pattern recorded' }), _jsx("div", { className: "memory-grid", style: { gridTemplateColumns: `repeat(${size}, 1fr)` }, children: Array.from({ length: size * size }, (_, index) => (_jsx("button", { className: `memory-tile ${status === 'show' && pattern.includes(index) ? 'active' : ''} ${selected.includes(index) ? 'selected' : ''}`, onClick: () => chooseTile(index), "aria-label": `Tile ${index + 1}` }, index))) })] })) }));
+}
+const colorOptions = [
+    { name: 'Violet', value: '#a487ff' },
+    { name: 'Cyan', value: '#56dce9' },
+    { name: 'Gold', value: '#f3bf58' },
+    { name: 'Rose', value: '#f581a5' },
+];
+function ColorConflict({ onFinish, onExit }) {
+    const game = games[1];
+    const totalRounds = 12;
+    const [status, setStatus] = useState('intro');
+    const [round, setRound] = useState(1);
+    const [prompt, setPrompt] = useState({ word: colorOptions[0], ink: colorOptions[1] });
+    const [score, setScore] = useState(0);
+    const [correct, setCorrect] = useState(0);
+    const [feedback, setFeedback] = useState(null);
+    const [startedAt, setStartedAt] = useState(0);
+    const nextPrompt = (nextRound) => {
+        const word = colorOptions[randomInt(0, colorOptions.length - 1)];
+        const possibleInk = nextRound > 2 ? colorOptions.filter((color) => color.name !== word.name) : colorOptions;
+        const ink = possibleInk[randomInt(0, possibleInk.length - 1)];
+        setPrompt({ word, ink });
+        setRound(nextRound);
+        setFeedback(null);
+        setStartedAt(performance.now());
+        setStatus('playing');
+    };
+    const start = () => nextPrompt(1);
+    const answer = (color) => {
+        if (status !== 'playing')
+            return;
+        const isCorrect = color.name === prompt.ink.name;
+        const responseTime = performance.now() - startedAt;
+        const points = isCorrect ? Math.max(80, Math.round(400 - responseTime / 8)) : 0;
+        setScore((current) => current + points);
+        setCorrect((current) => current + (isCorrect ? 1 : 0));
+        setFeedback(isCorrect ? 'good' : 'bad');
+        setStatus('feedback');
+        window.setTimeout(() => {
+            if (round === totalRounds) {
+                const finalCorrect = correct + (isCorrect ? 1 : 0);
+                const accuracy = Math.round((finalCorrect / totalRounds) * 100);
+                onFinish({
+                    game: 'focus',
+                    score: score + points,
+                    accuracy,
+                    xp: 60 + accuracy,
+                    headline: accuracy >= 83 ? 'Focus held steady.' : 'Attention session complete.',
+                    detail: `You identified ${finalCorrect} of ${totalRounds} ink colors correctly.`,
+                });
+            }
+            else {
+                nextPrompt(round + 1);
+            }
+        }, 520);
+    };
+    return (_jsx(GameFrame, { game: game, round: status === 'intro' ? null : round, totalRounds: totalRounds, score: score, onExit: onExit, children: status === 'intro' ? (_jsxs("div", { className: "start-panel game-title", children: [_jsx("span", { className: "eyebrow", children: "SELECTIVE ATTENTION" }), _jsx("h1", { children: "Trust the ink, not the word." }), _jsx("p", { children: "A color word will appear in conflicting ink. Choose the ink color as quickly and accurately as possible." }), _jsx("button", { className: "primary-button", onClick: start, children: "Begin focus test" })] })) : (_jsxs("div", { style: { width: '100%' }, children: [_jsx("div", { className: "stage-label", children: "What color is the ink?" }), _jsx("div", { className: "focus-word", style: { color: prompt.ink.value }, children: prompt.word.name }), _jsx("div", { className: "answer-grid", children: colorOptions.map((color) => (_jsx("button", { className: "answer-button", onClick: () => answer(color), children: color.name }, color.name))) }), _jsx("div", { className: `feedback ${feedback ?? ''}`, children: feedback === 'good' ? 'Correct' : feedback === 'bad' ? `The ink was ${prompt.ink.name}` : '' })] })) }));
+}
+function makePattern(round) {
+    const mode = round % 4;
+    if (mode === 0) {
+        const start = randomInt(2, 9);
+        const step = randomInt(2, 5);
+        const values = Array.from({ length: 5 }, (_, index) => start + index * step);
+        return { values, answer: start + 5 * step };
+    }
+    if (mode === 1) {
+        const start = randomInt(1, 4);
+        const multiplier = randomInt(2, 3);
+        const values = Array.from({ length: 5 }, (_, index) => start * multiplier ** index);
+        return { values, answer: start * multiplier ** 5 };
+    }
+    if (mode === 2) {
+        const start = randomInt(1, 5);
+        const values = [start];
+        for (let index = 1; index < 5; index += 1)
+            values.push(values[index - 1] + index + round);
+        return { values, answer: values[4] + 5 + round };
+    }
+    const first = randomInt(1, 5);
+    const second = randomInt(2, 7);
+    const values = [first, second];
+    while (values.length < 5)
+        values.push(values.at(-1) + values.at(-2));
+    return { values, answer: values.at(-1) + values.at(-2) };
+}
+function PatternPulse({ onFinish, onExit }) {
+    const game = games[2];
+    const totalRounds = 8;
+    const [status, setStatus] = useState('intro');
+    const [round, setRound] = useState(1);
+    const [problem, setProblem] = useState(() => makePattern(1));
+    const [options, setOptions] = useState([]);
+    const [score, setScore] = useState(0);
+    const [correct, setCorrect] = useState(0);
+    const [feedback, setFeedback] = useState(null);
+    const prepare = (nextRound) => {
+        const next = makePattern(nextRound);
+        const distractors = new Set([next.answer]);
+        while (distractors.size < 4) {
+            const offset = randomInt(1, Math.max(4, Math.round(next.answer * 0.2)));
+            distractors.add(next.answer + (Math.random() > 0.5 ? offset : -offset));
+        }
+        setProblem(next);
+        setOptions(shuffle([...distractors]));
+        setRound(nextRound);
+        setFeedback(null);
+        setStatus('playing');
+    };
+    const choose = (option) => {
+        if (status !== 'playing')
+            return;
+        const isCorrect = option === problem.answer;
+        const points = isCorrect ? 450 + round * 40 : 0;
+        setScore((value) => value + points);
+        setCorrect((value) => value + (isCorrect ? 1 : 0));
+        setFeedback(isCorrect ? 'good' : 'bad');
+        setStatus('feedback');
+        window.setTimeout(() => {
+            if (round === totalRounds) {
+                const finalCorrect = correct + (isCorrect ? 1 : 0);
+                const accuracy = Math.round((finalCorrect / totalRounds) * 100);
+                onFinish({
+                    game: 'pattern',
+                    score: score + points,
+                    accuracy,
+                    xp: 70 + accuracy,
+                    headline: accuracy >= 75 ? 'Rule detected.' : 'Reasoning reps complete.',
+                    detail: `You solved ${finalCorrect} of ${totalRounds} number patterns.`,
+                });
+            }
+            else {
+                prepare(round + 1);
+            }
+        }, 650);
+    };
+    return (_jsx(GameFrame, { game: game, round: status === 'intro' ? null : round, totalRounds: totalRounds, score: score, onExit: onExit, children: status === 'intro' ? (_jsxs("div", { className: "start-panel game-title", children: [_jsx("span", { className: "eyebrow", children: "FLUID REASONING" }), _jsx("h1", { children: "Find the hidden rule." }), _jsx("p", { children: "Examine each sequence and choose the value that should come next. The patterns become less obvious as you advance." }), _jsx("button", { className: "primary-button", onClick: () => prepare(1), children: "Begin pattern test" })] })) : (_jsxs("div", { style: { width: '100%' }, children: [_jsx("div", { className: "stage-label", children: "What comes next?" }), _jsxs("div", { className: "sequence", children: [problem.values.map((value, index) => _jsx("span", { children: value }, `${value}-${index}`)), _jsx("span", { className: "missing", children: "?" })] }), _jsx("div", { className: "answer-grid", children: options.map((option) => (_jsx("button", { className: "answer-button", onClick: () => choose(option), children: option }, option))) }), _jsx("div", { className: `feedback ${feedback ?? ''}`, children: feedback === 'good' ? 'Correct rule' : feedback === 'bad' ? `Answer: ${problem.answer}` : '' })] })) }));
+}
+function makeMath(round) {
+    const difficulty = Math.min(4, 1 + Math.floor(round / 4));
+    const operators = difficulty < 3 ? ['+', '−'] : ['+', '−', '×'];
+    const operator = operators[randomInt(0, operators.length - 1)];
+    let left = randomInt(3, 12 + difficulty * 8);
+    let right = randomInt(2, 9 + difficulty * 4);
+    if (operator === '−' && right > left)
+        [left, right] = [right, left];
+    if (operator === '×') {
+        left = randomInt(2, 7 + difficulty);
+        right = randomInt(2, 9);
+    }
+    const answer = operator === '+' ? left + right : operator === '−' ? left - right : left * right;
+    return { left, right, operator, answer };
+}
+function NumberSprint({ onFinish, onExit }) {
+    const game = games[3];
+    const duration = 35;
+    const [status, setStatus] = useState('intro');
+    const [remaining, setRemaining] = useState(duration);
+    const [problem, setProblem] = useState(() => makeMath(1));
+    const [answer, setAnswer] = useState('');
+    const [score, setScore] = useState(0);
+    const [attempts, setAttempts] = useState(0);
+    const [correct, setCorrect] = useState(0);
+    const [feedback, setFeedback] = useState(null);
+    const inputRef = useRef(null);
+    useEffect(() => {
+        if (status !== 'playing')
+            return;
+        if (remaining <= 0) {
+            const accuracy = attempts ? Math.round((correct / attempts) * 100) : 0;
+            onFinish({
+                game: 'math',
+                score,
+                accuracy,
+                xp: 50 + accuracy,
+                headline: correct >= 10 ? 'Numbers moved fast.' : 'Speed session complete.',
+                detail: `You solved ${correct} problems with ${accuracy}% accuracy.`,
+            });
+            return;
+        }
+        const timer = window.setTimeout(() => setRemaining((value) => value - 1), 1000);
+        return () => window.clearTimeout(timer);
+    }, [remaining, status, attempts, correct, score, onFinish]);
+    useEffect(() => {
+        if (status === 'playing')
+            inputRef.current?.focus();
+    }, [status, problem]);
+    const start = () => {
+        setRemaining(duration);
+        setProblem(makeMath(1));
+        setAnswer('');
+        setScore(0);
+        setAttempts(0);
+        setCorrect(0);
+        setStatus('playing');
+    };
+    const submit = (event) => {
+        event.preventDefault();
+        if (!answer.trim() || status !== 'playing')
+            return;
+        const isCorrect = Number(answer) === problem.answer;
+        const nextAttempts = attempts + 1;
+        setAttempts(nextAttempts);
+        setCorrect((value) => value + (isCorrect ? 1 : 0));
+        setScore((value) => value + (isCorrect ? 220 + remaining * 3 : 0));
+        setFeedback(isCorrect ? 'good' : 'bad');
+        setAnswer('');
+        window.setTimeout(() => setFeedback(null), 300);
+        setProblem(makeMath(nextAttempts));
+    };
+    return (_jsx(GameFrame, { game: game, round: status === 'intro' ? null : attempts + 1, totalRounds: '∞', score: score, onExit: onExit, children: status === 'intro' ? (_jsxs("div", { className: "start-panel game-title", children: [_jsx("span", { className: "eyebrow", children: "PROCESSING SPEED" }), _jsx("h1", { children: "Think clean. Move quickly." }), _jsxs("p", { children: ["Solve as many arithmetic problems as you can in ", duration, " seconds. Accuracy is worth more than guessing."] }), _jsx("button", { className: "primary-button", onClick: start, children: "Begin number sprint" })] })) : (_jsxs("div", { style: { width: '100%' }, children: [_jsxs("div", { className: "stage-label", children: [remaining, " seconds remaining"] }), _jsxs("div", { className: "math-question", children: [problem.left, " ", problem.operator, " ", problem.right] }), _jsxs("form", { className: "math-form", onSubmit: submit, children: [_jsx("input", { ref: inputRef, inputMode: "numeric", pattern: "-?[0-9]*", value: answer, onChange: (event) => setAnswer(event.target.value), "aria-label": "Your answer", placeholder: "Answer" }), _jsx("button", { className: "primary-button", type: "submit", children: "Submit" })] }), _jsx("div", { className: `feedback ${feedback ?? ''}`, children: feedback === 'good' ? 'Correct' : feedback === 'bad' ? `Answer: ${problem.answer}` : '' })] })) }));
+}
+function Results({ result, best, onAgain, onHome }) {
+    const game = games.find((item) => item.id === result.game);
+    return (_jsx("div", { className: "results-screen", children: _jsxs("section", { className: "results-card glass-card", children: [_jsx("div", { className: `result-badge ${game.accent}`, children: game.glyph }), _jsx("span", { className: "eyebrow", children: "SESSION COMPLETE" }), _jsx("h1", { children: result.headline }), _jsx("p", { children: result.detail }), _jsxs("div", { className: "result-metrics", children: [_jsxs("div", { children: [_jsx("small", { children: "Score" }), _jsx("strong", { children: result.score.toLocaleString() })] }), _jsxs("div", { children: [_jsx("small", { children: "Accuracy" }), _jsxs("strong", { children: [result.accuracy, "%"] })] }), _jsxs("div", { children: [_jsx("small", { children: "XP earned" }), _jsxs("strong", { children: ["+", result.xp] })] })] }), _jsxs("div", { className: "best-line", children: [_jsx("span", { children: "Personal best" }), _jsx("b", { children: best.toLocaleString() })] }), _jsxs("div", { className: "result-actions", children: [_jsx("button", { className: "secondary-button", onClick: onHome, children: "Dashboard" }), _jsx("button", { className: "primary-button", onClick: onAgain, children: "Train again" })] })] }) }));
+}
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function shuffle(items) {
+    const copy = [...items];
+    for (let index = copy.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+    }
+    return copy;
+}
+export default App;
+
+createRoot(document.getElementById('root')).render(createElement(App));
+  </script>
+</body>
+</html>
