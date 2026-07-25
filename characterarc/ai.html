@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a100d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CharacterArc AI" />
+  <meta name="description" content="CharacterArc commitment coaching with a bounded AI layer." />
+  <title>CharacterArc Coach + AI</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090c0b}
+    iframe{display:block;width:100%;height:100%;border:0;background:#090c0b}
+    #loading{position:fixed;inset:0;display:grid;place-items:center;color:#bce9cb;font:600 15px system-ui;background:#090c0b}
+  </style>
+</head>
+<body>
+  <div id="loading">Opening CharacterArc Coach + AI…</div>
+  <iframe id="characterarc" src="./coach.html" title="CharacterArc Coach + AI"></iframe>
+  <script>
+    const frame=document.getElementById('characterarc');
+    frame.addEventListener('load',()=>{
+      const doc=frame.contentDocument;
+      const css=doc.createElement('link');
+      css.rel='stylesheet';
+      css.href='./ai.css';
+      doc.head.append(css);
+      const script=doc.createElement('script');
+      script.src='./ai.js';
+      script.onload=()=>document.getElementById('loading').remove();
+      script.onerror=()=>{document.getElementById('loading').textContent='The AI layer could not load. Refresh to try again.'};
+      doc.body.append(script);
+    });
+  </script>
+</body>
+</html>
