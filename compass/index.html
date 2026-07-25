@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="True North">
+<title>True North — Compass of Character</title>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="mark">✦</div><div><h1>TRUE NORTH</h1><p>Compass of Character Scenario Lab</p></div></div>
+    <button class="icon-btn" id="constitutionBtn" aria-label="Open constitution">📜 Constitution</button>
+  </header>
+
+  <section class="hero">
+    <span class="kicker">✦ Constitutional Formation</span>
+    <h2>Who will you become under pressure?</h2>
+    <p>Practice decisions where achievement, relationships, responsibility, and service pull in different directions. The goal is not perfect answers. It is a formed center that can return to alignment.</p>
+    <div class="hero-actions"><button class="primary" id="dailyBtn">Begin today’s scenario</button><button class="secondary" id="randomBtn">Choose for me</button></div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><div><h3>Constitutional formation</h3><div class="muted" style="font-size:12px;margin-top:4px">Alignment practiced across real tensions</div></div><span id="rank" class="tag" style="margin:0">Apprentice</span></div>
+      <div class="progress-row">
+        <div class="stat"><strong id="completed">0</strong><span>Scenarios completed</span></div>
+        <div class="stat"><strong id="alignment">0%</strong><span>Alignment score</span></div>
+        <div class="stat"><strong id="streak">0</strong><span>Day streak</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Your Compass</h3>
+      <div class="virtues" id="virtueBars"></div>
+    </div>
+  </section>
+
+  <div class="section-title"><div><h2>Scenario Library</h2><p>Six virtues. Twelve pressures. One center.</p></div><p id="libraryProgress">0 of 12 practiced</p></div>
+  <section class="scenarios" id="scenarioGrid"></section>
+  <p class="footer">Built from the Center of Success Constitution v1.0 and Canons of Practice v1.0. Reflection data remains in this browser. This is a formation tool, not a psychological or employment assessment.</p>
+</div>
+
+<div class="modal" id="scenarioModal" role="dialog" aria-modal="true" aria-labelledby="scenarioTitle">
+  <div class="sheet">
+    <div class="sheet-head"><div><div class="eyebrow" id="scenarioMeta"></div><h2 id="scenarioTitle"></h2><div class="muted" id="scenarioContext" style="line-height:1.5;font-size:13px"></div></div><button class="icon-btn" id="closeModal" aria-label="Close">✕</button></div>
+    <div class="pressure" id="scenarioPressure"></div>
+    <div class="choices" id="choices"></div>
+    <div class="feedback" id="feedback">
+      <div class="verdict" id="verdict"><h3 id="verdictTitle"></h3><p id="verdictText"></p><div class="principles" id="principles"></div></div>
+      <div class="reflect"><label for="reflection">Return: What would you say, do, or repair next?</label><textarea id="reflection" placeholder="Name one concrete next action..."></textarea></div>
+      <div class="next-row"><button class="secondary" id="saveReflection">Save reflection</button><button class="primary" id="nextScenario">Next scenario</button></div>
+    </div>
+  </div>
+</div>
+
+<aside class="drawer" id="drawer" aria-label="Constitution reference">
+  <div style="display:flex;justify-content:space-between;gap:12px"><div><div class="eyebrow">Root Document</div><h2>Center of Success Constitution</h2></div><button class="icon-btn" id="closeDrawer">✕</button></div>
+  <p class="muted" style="line-height:1.55">Success is the formation of a life rightly ordered toward what is worthy. Every decision is examined for what it clarifies, serves, trains, or protects.</p>
+  <div id="articles"></div>
+</aside>
+<div class="toast" id="toast">Saved on this device</div>
+<script src="data.js"></script><script src="app.js"></script>
+</body></html>
