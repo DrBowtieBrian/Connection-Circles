@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07110f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PraxisArc" />
+  <meta name="description" content="Adaptive practical-agency scenario training." />
+  <title>PraxisArc — Adaptive Competence Training</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="ambient" aria-hidden="true"></div>
+    <header class="topbar">
+      <button class="brand" id="homeButton" aria-label="Go to home">
+        <span class="brand-mark">P</span>
+        <span><strong>PraxisArc</strong><small>Adaptive competence training</small></span>
+      </button>
+      <div class="profile">
+        <div class="level" id="levelBadge">1</div>
+        <div class="xp">
+          <div class="xp-row"><span id="levelLabel">Level 1</span><span id="xpLabel">0 / 500 XP</span></div>
+          <div class="track"><div class="fill" id="xpFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </header>
+    <main id="appRoot"></main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
